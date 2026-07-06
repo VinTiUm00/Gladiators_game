@@ -1,7 +1,7 @@
 #include <QVBoxLayout>
 #include <algorithm>
 
-#include "../headers/MainWindow.hpp"
+#include "MainWindow.hpp"
 // Другие окна
 
 MainWindow::MainWindow(QWidget* parent) : QWidget(parent){
@@ -12,11 +12,6 @@ MainWindow::MainWindow(QWidget* parent) : QWidget(parent){
     TextLogo->setFixedHeight(50);
     TextLogo->setAlignment(Qt::AlignmentFlag::AlignCenter);
     TextLogo->setAttribute(Qt::WA_TranslucentBackground);
-
-    // инициализация текса
-    if (!this->scoreList.empty()){
-        this->maxScore = *(std::max_element(this->scoreList.begin(), this->scoreList.end()));
-    }
 
     // инициализация кнопок
     btnPlay = new QPushButton("Играть", this);

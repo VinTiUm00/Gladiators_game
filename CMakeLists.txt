@@ -35,7 +35,7 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 include(GNUInstallDirs)
-include_directories(header)
+include_directories(headers)
 
 install(TARGETS ${PROJECT_NAME}
     BUNDLE  DESTINATION .
