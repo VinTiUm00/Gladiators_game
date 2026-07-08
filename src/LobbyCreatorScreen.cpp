@@ -1,6 +1,5 @@
 #include <QVBoxLayout>
 #include <QPushButton>
-#include <QLabel>
 
 #include "LobbyCreatorScreen.hpp"
 

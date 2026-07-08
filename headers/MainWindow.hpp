@@ -7,6 +7,7 @@
 #include "MenuScreen.hpp"
 #include "LobbyCreatorScreen.hpp"
 #include "LobbyConnectionScreen.hpp"
+#include "PaintingScreen.hpp"
 // Другие окна
 
 class MainWindow : public QMainWindow {
@@ -23,12 +24,14 @@ private:
     MenuScreen *menuScreen;
     LobbyCreatorScreen *lobbyCreatorScreen;
     LobbyConnectionScreen *lobbyConnectionScreen;
+    PaintingScreen *paintingScreen;
 
 private slots:
     void createGame();
     void connectGame();
     void backToMenu();
     void exit();
+    void openCanvas();
 };
 
 #endif

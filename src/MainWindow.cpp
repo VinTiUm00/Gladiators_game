@@ -1,5 +1,4 @@
 #include <QVBoxLayout>
-#include <algorithm>
 
 #include "MainWindow.hpp"
 
@@ -14,11 +13,13 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent){
     menuScreen = new MenuScreen();
     lobbyCreatorScreen = new LobbyCreatorScreen();
     lobbyConnectionScreen = new LobbyConnectionScreen();
+    paintingScreen = new PaintingScreen();
 
     // Добавляем экраны в стек
     stack->addWidget(menuScreen);
     stack->addWidget(lobbyCreatorScreen);
     stack->addWidget(lobbyConnectionScreen);
+    stack->addWidget(paintingScreen);
 
     // Показываем главное меню по умолчанию
     stack->setCurrentWidget(menuScreen);
@@ -28,8 +29,12 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent){
     connect(menuScreen, &MenuScreen::connectGameClicked, this, &MainWindow::connectGame);
     connect(menuScreen, &MenuScreen::exitBtnClicked, this, &MainWindow::exit);
     
+    connect(lobbyCreatorScreen, &LobbyCreatorScreen::createGameClicked, this, &MainWindow::openCanvas);
     connect(lobbyCreatorScreen, &LobbyCreatorScreen::backToMenuClicked, this, &MainWindow::backToMenu);
+
     connect(lobbyConnectionScreen, &LobbyConnectionScreen::backClicked, this, &MainWindow::backToMenu);
+
+    connect(paintingScreen, &PaintingScreen::exitLobbyClicked, this, &MainWindow::backToMenu);
 }
 
 void MainWindow::createGame(){
@@ -46,4 +51,8 @@ void MainWindow::backToMenu(){
 
 void MainWindow::exit(){
     this->close();
+}
+
+void MainWindow::openCanvas(){
+    stack->setCurrentWidget(paintingScreen);
 }
