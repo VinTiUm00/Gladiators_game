@@ -2,48 +2,48 @@
 #include <algorithm>
 
 #include "MainWindow.hpp"
-// Другие окна
 
-MainWindow::MainWindow(QWidget* parent) : QWidget(parent){
-    QVBoxLayout* layout = new QVBoxLayout(this); // Группировка кнопок
+MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent){
+    setWindowTitle("Gladiators"); // Название окна
 
-    QLabel* TextLogo = new QLabel("GLADIATORS", this);
-    TextLogo->setStyleSheet("QLabel { font-size: 56px; color: white; }");
-    TextLogo->setFixedHeight(50);
-    TextLogo->setAlignment(Qt::AlignmentFlag::AlignCenter);
-    TextLogo->setAttribute(Qt::WA_TranslucentBackground);
+    // Создаем контейнер
+    stack = new QStackedWidget(this);
+    setCentralWidget(stack);
 
-    // инициализация кнопок
-    btnPlay = new QPushButton("Играть", this);
-    btnPlay->setFixedHeight(50);
+    // Создаем экраны
+    menuScreen = new MenuScreen();
+    lobbyCreatorScreen = new LobbyCreatorScreen();
+    lobbyConnectionScreen = new LobbyConnectionScreen();
 
-    btnExit = new QPushButton("Выход", this);
-    btnExit->setFixedHeight(50);
+    // Добавляем экраны в стек
+    stack->addWidget(menuScreen);
+    stack->addWidget(lobbyCreatorScreen);
+    stack->addWidget(lobbyConnectionScreen);
 
-    // кастомизация
-    btnPlay->setStyleSheet("QPushButton { background-color: #6dbf6b; color: white; font-weight: 700; font-size: 16px; }");
-    btnExit->setStyleSheet("QPushButton { background-color: #AF505A; color: white; font-weight: 700; font-size: 16px; }");
+    // Показываем главное меню по умолчанию
+    stack->setCurrentWidget(menuScreen);
 
-    // добавление в группировку
-    layout->addWidget(TextLogo, Qt::AlignCenter);
-    layout->addWidget(btnPlay);
-    layout->addWidget(btnExit);
-
-    // connect(btnPlay, &QPushButton::clicked, this, &MainWindow::***);
-    connect(btnExit, &QPushButton::clicked, this, &MainWindow::closeWindow);
+    // Подключаем сигналы от кнопок меню
+    connect(menuScreen, &MenuScreen::startGameClicked, this, &MainWindow::createGame);
+    connect(menuScreen, &MenuScreen::connectGameClicked, this, &MainWindow::connectGame);
+    connect(menuScreen, &MenuScreen::exitBtnClicked, this, &MainWindow::exit);
+    
+    connect(lobbyCreatorScreen, &LobbyCreatorScreen::backToMenuClicked, this, &MainWindow::backToMenu);
+    connect(lobbyConnectionScreen, &LobbyConnectionScreen::backClicked, this, &MainWindow::backToMenu);
 }
 
-MainWindow::~MainWindow() = default;
+void MainWindow::createGame(){
+    stack->setCurrentWidget(lobbyCreatorScreen);
+}
 
+void MainWindow::connectGame(){
+    stack->setCurrentWidget(lobbyConnectionScreen);
+}
 
-void MainWindow::closeWindow(){
+void MainWindow::backToMenu(){
+    stack->setCurrentWidget(menuScreen);
+}
+
+void MainWindow::exit(){
     this->close();
-}
-
-void MainWindow::hideWindow(){
-    this->hide();
-}
-
-void MainWindow::showWindow(){
-    this->show();
 }

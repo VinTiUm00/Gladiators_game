@@ -8,10 +8,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(SRC_FILES # файлы для компиляции
     main.cpp
     src/MainWindow.cpp
+    src/MenuScreen.cpp
+    src/LobbyCreatorScreen.cpp
+    src/LobbyConnectionScreen.cpp
 )
 
 set(HEADER_FILES # header'ы для MOC (header'ы, где используется макрос Q_OBJECT)
     headers/MainWindow.hpp
+    headers/MenuScreen.hpp
+    headers/LobbyCreatorScreen.hpp
+    headers/LobbyConnectionScreen.hpp
 )
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Gui Widgets) # Поиск QT и его компонентов

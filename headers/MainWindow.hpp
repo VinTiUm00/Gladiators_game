@@ -1,26 +1,34 @@
 #ifndef MAINWINDOW_HPP
 #define MAINWINDOW_HPP
 
-#include <QWidget>
-#include <QPushButton>
-#include <QLabel>
+#include <QMainWindow>
+#include <QStackedWidget>
 
-class MainWindow : public QWidget {
+#include "MenuScreen.hpp"
+#include "LobbyCreatorScreen.hpp"
+#include "LobbyConnectionScreen.hpp"
+// Другие окна
+
+class MainWindow : public QMainWindow {
 
     Q_OBJECT // Макрос, без которого не работают сигналы
 
 public:
-    MainWindow(QWidget* parent = nullptr);
-    virtual ~MainWindow();
+    explicit MainWindow(QWidget* parent = nullptr);
 
-public slots:
-    void closeWindow();
-    void hideWindow();
-    void showWindow();
+private:
+    QStackedWidget *stack;
 
-private: // какие видимые элементы будут
-    QPushButton* btnPlay;
-    QPushButton* btnExit;
+    // Экраны
+    MenuScreen *menuScreen;
+    LobbyCreatorScreen *lobbyCreatorScreen;
+    LobbyConnectionScreen *lobbyConnectionScreen;
+
+private slots:
+    void createGame();
+    void connectGame();
+    void backToMenu();
+    void exit();
 };
 
 #endif
