@@ -3,7 +3,7 @@
 #include "Canvas.hpp"
 
 Canvas::Canvas(QWidget *parent) : QWidget(parent) {
-    setMinimumSize(400, 400);
+    setFixedSize(400, 400);
     setMouseTracking(true); // Для отслеживания движения мыши
     
     // Создаем QPixmap с белым фоном

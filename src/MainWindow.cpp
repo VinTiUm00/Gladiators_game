@@ -54,5 +54,6 @@ void MainWindow::exit(){
 }
 
 void MainWindow::openCanvas(){
+    paintingScreen->newCanvas();
     stack->setCurrentWidget(paintingScreen);
 }

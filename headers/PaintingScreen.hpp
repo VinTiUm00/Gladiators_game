@@ -13,6 +13,8 @@ public:
     PaintingScreen(QWidget* parent = nullptr);
     virtual ~PaintingScreen();
 
+    void newCanvas();
+
 private:
     Canvas *canvas;
 

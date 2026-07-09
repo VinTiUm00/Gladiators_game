@@ -25,3 +25,7 @@ PaintingScreen::PaintingScreen(QWidget* parent) : QWidget(parent) {
 }
 
 PaintingScreen::~PaintingScreen() = default;
+
+void PaintingScreen::newCanvas(){
+    this->canvas->clearCanvas();
+}
