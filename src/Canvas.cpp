@@ -3,7 +3,7 @@
 #include "Canvas.hpp"
 
 Canvas::Canvas(QWidget *parent) : QWidget(parent) {
-    setFixedSize(400, 400);
+    setFixedSize(600, 600);
     setMouseTracking(true); // Для отслеживания движения мыши
     
     // Создаем QPixmap с белым фоном
@@ -11,7 +11,7 @@ Canvas::Canvas(QWidget *parent) : QWidget(parent) {
     pixmap.fill(Qt::white);
     
     penColor = Qt::black;
-    penWidth = 2;
+    penWidth = 10;
     lastPos = QPoint();
 }
 
@@ -50,6 +50,14 @@ void Canvas::resizeEvent(QResizeEvent *event) {
 void Canvas::mousePressEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
         lastPos = event->pos();
+
+        QPainter painter(&pixmap);
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.setPen(QPen(penColor, penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        
+        painter.drawPoint(lastPos);
+        
+        update();
     }
 }
 

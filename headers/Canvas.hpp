@@ -14,10 +14,11 @@ public:
     explicit Canvas(QWidget *parent = nullptr);
     virtual ~Canvas();
 
+    void clearCanvas();
+
+public slots:
     void setPenColor(const QColor &color);
     void setPenWidth(int width);
-
-    void clearCanvas();
 
 protected:
     void paintEvent(QPaintEvent *event) override;
