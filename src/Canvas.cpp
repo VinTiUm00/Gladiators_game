@@ -1,8 +1,9 @@
 #include <QPainter>
 
 #include "Canvas.hpp"
+#include "NetworkManager.hpp"
 
-Canvas::Canvas(QWidget *parent) : QWidget(parent) {
+Canvas::Canvas(QWidget *parent) : QWidget(parent), networkManager(nullptr) {
     setFixedSize(600, 600);
     setMouseTracking(true); // Для отслеживания движения мыши
     
@@ -57,6 +58,16 @@ void Canvas::mousePressEvent(QMouseEvent *event) {
         
         painter.drawPoint(lastPos);
         
+        if (networkManager) {
+            DrawingEvent evt;
+            evt.playerId = networkManager->getPlayerId();
+            evt.from = lastPos;
+            evt.to = lastPos;
+            evt.color = penColor;
+            evt.width = penWidth;
+            networkManager->broadcastDrawingEvent(evt);
+        }
+        
         update();
     }
 }
@@ -69,6 +80,16 @@ void Canvas::mouseMoveEvent(QMouseEvent *event) {
         
         painter.drawLine(lastPos, event->pos());
         
+        if (networkManager) {
+            DrawingEvent evt;
+            evt.playerId = networkManager->getPlayerId();
+            evt.from = lastPos;
+            evt.to = event->pos();
+            evt.color = penColor;
+            evt.width = penWidth;
+            networkManager->broadcastDrawingEvent(evt);
+        }
+        
         lastPos = event->pos();
         update();
     }
@@ -78,4 +99,18 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
         lastPos = QPoint();
     }
+}
+
+void Canvas::drawRemoteEvent(const DrawingEvent &event) {
+    QPainter painter(&pixmap);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setPen(QPen(event.color, event.width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    
+    if (event.from == event.to) {
+        painter.drawPoint(event.from);
+    } else {
+        painter.drawLine(event.from, event.to);
+    }
+    
+    update();
 }

@@ -3,10 +3,14 @@
 #include <QPushButton>
 #include <QColorDialog>
 #include <QSpinBox>
+#include <QLabel>
 
 #include "PaintingScreen.hpp"
+#include "NetworkManager.hpp"
 
-PaintingScreen::PaintingScreen(QWidget* parent) : QWidget(parent) {
+PaintingScreen::PaintingScreen(QWidget* parent) : QWidget(parent),
+    networkManager(nullptr), canDraw(false) {
+    
     // Группировка интерфейса
     QVBoxLayout* mainLayout = new QVBoxLayout(this); // Основной
     QVBoxLayout* vLayoutLeft = new QVBoxLayout; // Левый столбец
@@ -32,12 +36,18 @@ PaintingScreen::PaintingScreen(QWidget* parent) : QWidget(parent) {
     widthBox->setMaximumWidth(150);
     widthBox->setPrefix("Ширина пера: ");
 
+    // Статус
+    statusLabel = new QLabel("Ожидание других игроков...", this);
+    statusLabel->setAlignment(Qt::AlignCenter);
+    statusLabel->setStyleSheet("QLabel { color: #6b71bf; font-size: 16px; font-weight: 700; }");
+
     // Инициализация кнопок
     QPushButton *exitLobbyBtn = new QPushButton("Покинуть лобби", this);
     exitLobbyBtn->setFixedHeight(50);
+    exitLobbyBtn->setFixedWidth(200);
 
     // Кастомизация
-    exitLobbyBtn->setStyleSheet("QPushButton { background-color: #AF505A; color: white; font-weight: 700; font-size: 16px; }");
+    exitLobbyBtn->setStyleSheet("QPushButton { background-color: #AF505A; color: white; font-weight: 700; font-size: 16px; border-radius: 10px; }");
 
     // Добавление в группировку
     vLayoutLeft->addWidget(canvas);
@@ -48,8 +58,14 @@ PaintingScreen::PaintingScreen(QWidget* parent) : QWidget(parent) {
     hLayout->addLayout(vLayoutLeft);
     hLayout->addLayout(vLayoutRight);
 
+    mainLayout->addWidget(statusLabel);
     mainLayout->addLayout(hLayout);
-    mainLayout->addWidget(exitLobbyBtn);
+
+    QHBoxLayout *exitBtnLayout = new QHBoxLayout();
+    exitBtnLayout->addStretch();
+    exitBtnLayout->addWidget(exitLobbyBtn);
+    exitBtnLayout->addStretch();
+    mainLayout->addLayout(exitBtnLayout);
 
     // Подключение сигналов
     connect(exitLobbyBtn, &QPushButton::clicked, this, &PaintingScreen::exitLobbyClicked);
@@ -61,4 +77,42 @@ PaintingScreen::~PaintingScreen() = default;
 
 void PaintingScreen::newCanvas(){
     this->canvas->clearCanvas();
+    canDraw = true;
+    statusLabel->setText("Рисуйте вашего бойца!");
+    statusLabel->setStyleSheet("QLabel { color: #6dbf6b; font-size: 16px; font-weight: 700; }");
+}
+
+void PaintingScreen::setNetworkManager(NetworkManager *netMgr) {
+    networkManager = netMgr;
+    canvas->setNetworkManager(netMgr);
+    
+    if (networkManager) {
+        connect(networkManager, QOverload<int>::of(&NetworkManager::gameStateChanged),
+                this, &PaintingScreen::onGameStateChanged);
+    }
+}
+
+QPixmap PaintingScreen::getCanvasPixmap() const {
+    return canvas->grab();
+}
+
+void PaintingScreen::onGameStateChanged(int state) {
+    GameState gameState = static_cast<GameState>(state);
+    
+    if (gameState == GameState::DRAWING) {
+        canDraw = true;
+        statusLabel->setText("Рисуйте вашего бойца!");
+        statusLabel->setStyleSheet("QLabel { color: #6dbf6b; font-size: 16px; font-weight: 700; }");
+    } else if (gameState == GameState::VOTING) {
+        canDraw = false;
+        statusLabel->setText("Переход к голосованию...");
+        statusLabel->setStyleSheet("QLabel { color: #6b71bf; font-size: 16px; font-weight: 700; }");
+        emit readyForVoting();
+    }
+}
+
+void PaintingScreen::onStartVoting(const QList<int> &playerIds) {
+    canDraw = false;
+    statusLabel->setText("Голосование начинается!");
+    statusLabel->setStyleSheet("QLabel { color: #6b71bf; font-size: 16px; font-weight: 700; }");
 }

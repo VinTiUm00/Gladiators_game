@@ -6,6 +6,10 @@
 #include <QMouseEvent>
 #include <QColor>
 
+class NetworkManager;
+
+struct DrawingEvent;
+
 class Canvas : public QWidget {
 
     Q_OBJECT // Макрос, без которого не работают сигналы
@@ -15,6 +19,8 @@ public:
     virtual ~Canvas();
 
     void clearCanvas();
+    void setNetworkManager(NetworkManager *netMgr) { networkManager = netMgr; }
+    void drawRemoteEvent(const DrawingEvent &event);
 
 public slots:
     void setPenColor(const QColor &color);
@@ -28,11 +34,15 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
 
+signals:
+    void drawingEventToSend(const DrawingEvent &event);
+
 private:
     QPixmap pixmap;
     QColor penColor;
     int penWidth;
     QPoint lastPos;
+    NetworkManager *networkManager;
 };
 
 #endif

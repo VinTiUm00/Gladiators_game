@@ -58,7 +58,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), networkManager(nu
 void MainWindow::createGame(){
     networkManager->startServer();
     networkManager->setPlayerId(0);
-    networkManager->setPlayerNickname("Host");
+    networkManager->setPlayerNickname("Хост");
     stack->setCurrentWidget(lobbyCreatorScreen);
 }
 
@@ -114,5 +114,5 @@ void MainWindow::onVotingStarted(const QList<int> &playerIds) {
 }
 
 void MainWindow::onConnectionError(const QString &error) {
-    QMessageBox::critical(this, "Connection Error", error);
+    QMessageBox::critical(this, "Ошибка подключения", error);
 }

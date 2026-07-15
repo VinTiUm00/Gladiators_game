@@ -1,11 +1,15 @@
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QPushButton>
 #include <QLabel>
+#include <QSizePolicy>
 
 #include "MenuScreen.hpp"
 
 MenuScreen::MenuScreen(QWidget* parent) : QWidget(parent){
-    QVBoxLayout* layout = new QVBoxLayout(this); // Группировка кнопок
+    QVBoxLayout* layout = new QVBoxLayout(this);
+    layout->setSpacing(18);
+    layout->setContentsMargins(40, 36, 40, 32);
 
     QLabel* TextLogo = new QLabel("GLADIATORS", this);
     TextLogo->setStyleSheet("QLabel { font-size: 56px; color: white; }");
@@ -13,28 +17,39 @@ MenuScreen::MenuScreen(QWidget* parent) : QWidget(parent){
     TextLogo->setAlignment(Qt::AlignmentFlag::AlignCenter);
     TextLogo->setAttribute(Qt::WA_TranslucentBackground);
 
-    // Инициализация кнопок
     QPushButton *startBtn = new QPushButton("Создать игру", this);
-    startBtn->setFixedHeight(50);
+    startBtn->setFixedHeight(48);
+    startBtn->setFixedWidth(240);
+    startBtn->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     QPushButton *connectBtn = new QPushButton("Подключиться к игре", this);
-    connectBtn->setFixedHeight(50);
+    connectBtn->setFixedHeight(48);
+    connectBtn->setFixedWidth(280);
+    connectBtn->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     QPushButton *exitBtn = new QPushButton("Выход", this);
-    exitBtn->setFixedHeight(50);
+    exitBtn->setFixedHeight(48);
+    exitBtn->setFixedWidth(180);
+    exitBtn->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-    // Кастомизация
-    startBtn->setStyleSheet("QPushButton { background-color: #6dbf6b; color: white; font-weight: 700; font-size: 16px; }");
-    connectBtn->setStyleSheet("QPushButton { background-color: #6b71bf; color: white; font-weight: 700; font-size: 16px; }");
-    exitBtn->setStyleSheet("QPushButton { background-color: #AF505A; color: white; font-weight: 700; font-size: 16px; }");
+    startBtn->setStyleSheet("QPushButton { background-color: #6dbf6b; color: white; font-weight: 700; font-size: 16px; border-radius: 10px; padding: 0 16px; }");
+    connectBtn->setStyleSheet("QPushButton { background-color: #6b71bf; color: white; font-weight: 700; font-size: 16px; border-radius: 10px; padding: 0 16px; }");
+    exitBtn->setStyleSheet("QPushButton { background-color: #AF505A; color: white; font-weight: 700; font-size: 16px; border-radius: 10px; padding: 0 16px; }");
 
-    // Добавление в группировку
+    layout->addStretch();
     layout->addWidget(TextLogo, Qt::AlignCenter);
-    layout->addWidget(startBtn);
-    layout->addWidget(connectBtn);
-    layout->addWidget(exitBtn);
+    layout->addStretch(1);
 
-    // Подключение сигналов
+    QHBoxLayout* buttonsLayout = new QHBoxLayout();
+    buttonsLayout->setSpacing(12);
+    buttonsLayout->addStretch();
+    buttonsLayout->addWidget(startBtn);
+    buttonsLayout->addWidget(connectBtn);
+    buttonsLayout->addWidget(exitBtn);
+    buttonsLayout->addStretch();
+    layout->addLayout(buttonsLayout);
+    layout->addSpacing(8);
+
     connect(startBtn, &QPushButton::clicked, this, &MenuScreen::startGameClicked);
     connect(connectBtn, &QPushButton::clicked, this, &MenuScreen::connectGameClicked);
     connect(exitBtn, &QPushButton::clicked, this, &MenuScreen::exitBtnClicked);
