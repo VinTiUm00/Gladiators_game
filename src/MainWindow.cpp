@@ -59,10 +59,18 @@ void MainWindow::createGame(){
     networkManager->startServer();
     networkManager->setPlayerId(0);
     networkManager->setPlayerNickname("Host");
+    networkManager->beginLobby();
+    lobbyCreatorScreen->setLobbyStatus("Лобби создано. Ожидаем подключения игроков.");
+    lobbyCreatorScreen->setPlayers({"Host"});
+    lobbyCreatorScreen->setStartEnabled(false);
     stack->setCurrentWidget(lobbyCreatorScreen);
 }
 
 void MainWindow::connectGame(){
+    networkManager->connectToServer("127.0.0.1", 5555);
+    networkManager->setPlayerId(1);
+    networkManager->setPlayerNickname("Player");
+    networkManager->beginLobby();
     stack->setCurrentWidget(lobbyConnectionScreen);
 }
 
@@ -79,13 +87,24 @@ void MainWindow::exit(){
 }
 
 void MainWindow::openCanvas(){
-    networkManager->startGameSession();
+    if (networkManager->isHost()) {
+        networkManager->addConnectedPlayer(1, "Player");
+        networkManager->startGameSession();
+    } else {
+        networkManager->startGameSession();
+    }
     paintingScreen->newCanvas();
     stack->setCurrentWidget(paintingScreen);
 }
 
 void MainWindow::onPlayerConnected(int playerId, const QString &nickname) {
     qDebug() << "Player connected:" << playerId << nickname;
+    if (networkManager->isHost()) {
+        lobbyCreatorScreen->setLobbyStatus("Игрок подключился. Можно запускать игру.");
+        lobbyCreatorScreen->setPlayers({"Host", nickname});
+        lobbyCreatorScreen->setStartEnabled(true);
+        stack->setCurrentWidget(lobbyCreatorScreen);
+    }
 }
 
 void MainWindow::onGameStateChanged(int state) {

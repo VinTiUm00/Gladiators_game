@@ -5,6 +5,7 @@
 #include <QList>
 #include <QColor>
 #include <QPoint>
+#include <QString>
 
 enum class GameState {
     WAITING_FOR_PLAYERS,
@@ -37,11 +38,15 @@ public:
     void setPlayerNickname(const QString &nickname);
     void broadcastDrawingEvent(const DrawingEvent &event);
     void startGameSession();
+    void beginLobby();
     void changeGameState(GameState state);
     void broadcastVote(int votedPlayerId);
+    void addConnectedPlayer(int playerId, const QString &nickname);
+    void removeConnectedPlayer(int playerId);
 
     bool isHost() const { return isHostMode; }
     bool isConnected() const { return playerCount > 0; }
+    GameState getCurrentGameState() const { return currentGameState; }
     int getPlayerId() const { return playerId; }
     int getPlayerCount() const { return playerCount; }
 

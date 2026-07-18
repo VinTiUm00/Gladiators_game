@@ -11,20 +11,31 @@ LobbyCreatorScreen::LobbyCreatorScreen(QWidget* parent) : QWidget(parent){
     layout->setSpacing(14);
     layout->setContentsMargins(40, 40, 40, 40);
 
-    QLabel* titleLabel = new QLabel("Создание лобби", this);
+    QLabel* titleLabel = new QLabel("Лобби", this);
     titleLabel->setAlignment(Qt::AlignCenter);
     titleLabel->setStyleSheet("QLabel { color: #ffffff; font-size: 32px; font-weight: 800; }");
 
-    QLabel* hintLabel = new QLabel("Создайте комнату, и другие игроки смогут подключиться по своему никнейму.", this);
+    QLabel* hintLabel = new QLabel("Сначала создаётся лобби. Когда игроки подключатся, хост сможет начать игру.", this);
     hintLabel->setWordWrap(true);
     hintLabel->setAlignment(Qt::AlignCenter);
     hintLabel->setMaximumWidth(560);
     hintLabel->setStyleSheet("QLabel { color: #ffffff; font-size: 16px; font-weight: 600; }");
 
-    QPushButton *createGameBtn = new QPushButton("Запуск игры", this);
+    statusLabel = new QLabel("Ожидание игроков...", this);
+    statusLabel->setAlignment(Qt::AlignCenter);
+    statusLabel->setStyleSheet("QLabel { color: #e7e7ff; font-size: 15px; font-weight: 600; }");
+
+    playersLabel = new QLabel("Подключённые игроки: 1 (хост)", this);
+    playersLabel->setAlignment(Qt::AlignCenter);
+    playersLabel->setWordWrap(true);
+    playersLabel->setMaximumWidth(560);
+    playersLabel->setStyleSheet("QLabel { color: #cfe8ff; font-size: 14px; }");
+
+    createGameBtn = new QPushButton("Запуск игры", this);
     createGameBtn->setFixedHeight(48);
     createGameBtn->setFixedWidth(230);
     createGameBtn->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    createGameBtn->setEnabled(false);
 
     QPushButton *backToMenuBtn = new QPushButton("Назад в меню", this);
     backToMenuBtn->setFixedHeight(48);
@@ -37,6 +48,8 @@ LobbyCreatorScreen::LobbyCreatorScreen(QWidget* parent) : QWidget(parent){
     layout->addStretch();
     layout->addWidget(titleLabel, 0, Qt::AlignHCenter);
     layout->addWidget(hintLabel, 0, Qt::AlignHCenter);
+    layout->addWidget(statusLabel, 0, Qt::AlignHCenter);
+    layout->addWidget(playersLabel, 0, Qt::AlignHCenter);
 
     QHBoxLayout* buttonsLayout = new QHBoxLayout();
     buttonsLayout->setSpacing(12);
@@ -49,6 +62,18 @@ LobbyCreatorScreen::LobbyCreatorScreen(QWidget* parent) : QWidget(parent){
 
     connect(createGameBtn, &QPushButton::clicked, this, &LobbyCreatorScreen::createGameClicked);
     connect(backToMenuBtn, &QPushButton::clicked, this, &LobbyCreatorScreen::backToMenuClicked);
+}
+
+void LobbyCreatorScreen::setLobbyStatus(const QString &status){
+    statusLabel->setText(status);
+}
+
+void LobbyCreatorScreen::setPlayers(const QStringList &players){
+    playersLabel->setText("Подключённые игроки: " + players.join(", "));
+}
+
+void LobbyCreatorScreen::setStartEnabled(bool enabled){
+    createGameBtn->setEnabled(enabled);
 }
 
 LobbyCreatorScreen::~LobbyCreatorScreen() = default;
