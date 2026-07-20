@@ -31,6 +31,8 @@ LobbyCreatorScreen::LobbyCreatorScreen(QWidget* parent) : QWidget(parent){
     playersLabel->setMaximumWidth(560);
     playersLabel->setStyleSheet("QLabel { color: #cfe8ff; font-size: 14px; }");
 
+    playersList = new QListWidget(this); // Список подключенных игроков
+
     createGameBtn = new QPushButton("Запуск игры", this);
     createGameBtn->setFixedHeight(48);
     createGameBtn->setFixedWidth(230);
@@ -50,6 +52,7 @@ LobbyCreatorScreen::LobbyCreatorScreen(QWidget* parent) : QWidget(parent){
     layout->addWidget(hintLabel, 0, Qt::AlignHCenter);
     layout->addWidget(statusLabel, 0, Qt::AlignHCenter);
     layout->addWidget(playersLabel, 0, Qt::AlignHCenter);
+    layout->addWidget(playersList, 0, Qt::AlignHCenter);
 
     QHBoxLayout* buttonsLayout = new QHBoxLayout();
     buttonsLayout->setSpacing(12);
@@ -74,6 +77,12 @@ void LobbyCreatorScreen::setPlayers(const QStringList &players){
 
 void LobbyCreatorScreen::setStartEnabled(bool enabled){
     createGameBtn->setEnabled(enabled);
+}
+
+// Нужно будет переработать позже
+void LobbyCreatorScreen::playerConnected(int playerId, QString playerName){
+    QString playerInfo (playerName + " ID:" + QString::number(playerId));
+    this->playersList->addItem(playerInfo);
 }
 
 LobbyCreatorScreen::~LobbyCreatorScreen() = default;

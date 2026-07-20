@@ -29,6 +29,14 @@ LobbyConnectionScreen::LobbyConnectionScreen(QWidget* parent) : QWidget(parent){
     nicknameInput->setMaximumWidth(360);
     nicknameInput->setStyleSheet("QLineEdit { background-color: white; color: #2b2b2b; border-radius: 8px; padding: 6px 10px; font-size: 15px; }");
 
+    // Ввод ip (временное решение)
+    QLineEdit* ipInput = new QLineEdit(this);
+    ipInput->setPlaceholderText("IP лобби");
+    ipInput->setFixedHeight(42);
+    ipInput->setMinimumWidth(280);
+    ipInput->setMaximumWidth(360);
+    ipInput->setStyleSheet("QLineEdit { background-color: white; color: #2b2b2b; border-radius: 8px; padding: 6px 10px; font-size: 15px; }");
+
     QLabel* anonymityLabel = new QLabel("Скрытая идентичность: соперники увидят только бойца, а не ваше имя.", this);
     anonymityLabel->setWordWrap(true);
     anonymityLabel->setAlignment(Qt::AlignCenter);
@@ -52,6 +60,7 @@ LobbyConnectionScreen::LobbyConnectionScreen(QWidget* parent) : QWidget(parent){
     layout->addWidget(titleLabel, 0, Qt::AlignHCenter);
     layout->addWidget(hintLabel, 0, Qt::AlignHCenter);
     layout->addWidget(nicknameInput, 0, Qt::AlignHCenter);
+    layout->addWidget(ipInput, 0, Qt::AlignHCenter);
     layout->addWidget(anonymityLabel, 0, Qt::AlignHCenter);
 
     QHBoxLayout* buttonsLayout = new QHBoxLayout();
@@ -63,12 +72,12 @@ LobbyConnectionScreen::LobbyConnectionScreen(QWidget* parent) : QWidget(parent){
     layout->addLayout(buttonsLayout);
     layout->addStretch();
 
-    connect(connectionBtn, &QPushButton::clicked, this, [this, nicknameInput]() {
+    connect(connectionBtn, &QPushButton::clicked, this, [this, nicknameInput, ipInput]() {
         const QString nick = nicknameInput->text().trimmed();
         if (nick.isEmpty()) {
             nicknameInput->setText("Игрок");
         }
-        emit connectToGame();
+        emit connectToGame(ipInput->text());
     });
     connect(backBtn, &QPushButton::clicked, this, &LobbyConnectionScreen::backClicked);
 }

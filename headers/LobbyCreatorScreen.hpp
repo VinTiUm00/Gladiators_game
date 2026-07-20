@@ -5,6 +5,7 @@
 #include <QStringList>
 #include <QLabel>
 #include <QPushButton>
+#include <QListWidget>
 
 class LobbyCreatorScreen : public QWidget {
 
@@ -18,6 +19,7 @@ public:
     void setLobbyStatus(const QString &status);
     void setPlayers(const QStringList &players);
     void setStartEnabled(bool enabled);
+    void playerConnected(int playerId, QString playerName);
 
 signals:
     void createGameClicked();
@@ -27,6 +29,7 @@ private:
     QLabel *statusLabel;
     QLabel *playersLabel;
     QPushButton *createGameBtn;
+    QListWidget *playersList; // Список игроков (виджет)
 };
 
 #endif

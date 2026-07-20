@@ -2,6 +2,7 @@
 #define LOBBYCONNECTIONSCREEN_HPP
 
 #include <QWidget>
+#include <QString>
 
 class LobbyConnectionScreen : public QWidget {
 
@@ -12,7 +13,7 @@ public:
     virtual ~LobbyConnectionScreen();
 
 signals:
-    void connectToGame();
+    void connectToGame(QString ip);
     void backClicked();
 };
 

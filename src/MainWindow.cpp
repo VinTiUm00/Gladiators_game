@@ -44,8 +44,17 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), networkManager(nu
     connect(lobbyCreatorScreen, &LobbyCreatorScreen::createGameClicked, this, &MainWindow::openCanvas);
     connect(lobbyCreatorScreen, &LobbyCreatorScreen::backToMenuClicked, this, &MainWindow::backToMenu);
 
-    connect(lobbyConnectionScreen, &LobbyConnectionScreen::connectToGame, this, &MainWindow::openCanvas);
+    connect(lobbyConnectionScreen, &LobbyConnectionScreen::connectToGame, this, [this] (QString ip){
+        try {
+            this->networkManager->connectToServer(ip, 5555);
+            this->stack->setCurrentWidget(lobbyCreatorScreen);
+        }
+        catch (std::exception) {
+            // Временное решение
+        }
+    });
     connect(lobbyConnectionScreen, &LobbyConnectionScreen::backClicked, this, &MainWindow::backToMenu);
+    connect(networkManager, &NetworkManager::playerConnected, lobbyCreatorScreen, &LobbyCreatorScreen::playerConnected);
 
     connect(paintingScreen, &PaintingScreen::exitLobbyClicked, this, &MainWindow::backToMenu);
     connect(votingScreen, &VotingScreen::exitVotingClicked, this, &MainWindow::backToMenu);
@@ -67,10 +76,12 @@ void MainWindow::createGame(){
 }
 
 void MainWindow::connectGame(){
+    /*
     networkManager->connectToServer("127.0.0.1", 5555);
     networkManager->setPlayerId(1);
     networkManager->setPlayerNickname("Player");
     networkManager->beginLobby();
+    */
     stack->setCurrentWidget(lobbyConnectionScreen);
 }
 
