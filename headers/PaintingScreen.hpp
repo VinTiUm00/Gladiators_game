@@ -18,22 +18,20 @@ public:
     virtual ~PaintingScreen();
 
     void newCanvas();
-    void setNetworkManager(NetworkManager *netMgr);
-    QPixmap getCanvasPixmap() const;
+    //QPixmap getCanvasPixmap() const;
 
 public slots:
-    void onGameStateChanged(int state);
-    void onStartVoting(const QList<int> &playerIds);
+    //void onGameStateChanged(int state);
+    //void onStartVoting(const QList<int> &playerIds);
 
 private:
     Canvas *canvas;
-    NetworkManager *networkManager;
     QLabel *statusLabel;
-    bool canDraw;
+    bool canDraw; // ??
 
 signals:
     void exitLobbyClicked();
-    void readyForVoting();
+    //void readyForVoting();
 };
 
 #endif

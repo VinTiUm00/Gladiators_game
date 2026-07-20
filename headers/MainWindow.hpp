@@ -10,10 +10,7 @@
 #include "LobbyCreatorScreen.hpp"
 #include "LobbyConnectionScreen.hpp"
 #include "PaintingScreen.hpp"
-#include "VotingScreen.hpp"
-
-class NetworkManager;
-struct DrawingEvent;
+// #include "VotingScreen.hpp"
 
 class MainWindow : public QMainWindow {
 
@@ -30,13 +27,7 @@ private:
     LobbyCreatorScreen *lobbyCreatorScreen;
     LobbyConnectionScreen *lobbyConnectionScreen;
     PaintingScreen *paintingScreen;
-    VotingScreen *votingScreen;
-
-    // Сетевой менеджер
-    NetworkManager *networkManager;
-
-    // Данные игроков
-    QMap<int, QPixmap> playerDrawings;
+    // VotingScreen *votingScreen;
 
 private slots:
     void createGame();
@@ -46,11 +37,10 @@ private slots:
     void openCanvas();
     
     // Сетевые слоты
-    void onPlayerConnected(int playerId, const QString &nickname);
-    void onGameStateChanged(int state);
-    void onDrawingEventReceived(const DrawingEvent &event);
-    void onVotingStarted(const QList<int> &playerIds);
-    void onConnectionError(const QString &error);
+    //void onPlayerConnected(int playerId, const QString &nickname);
+    //void onGameStateChanged(int state);
+    //void onVotingStarted(const QList<int> &playerIds);
+    //void onConnectionError(const QString &error);
 };
 
 #endif

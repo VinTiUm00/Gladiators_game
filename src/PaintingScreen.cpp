@@ -6,11 +6,8 @@
 #include <QLabel>
 
 #include "PaintingScreen.hpp"
-#include "NetworkManager.hpp"
 
-PaintingScreen::PaintingScreen(QWidget* parent) : QWidget(parent),
-    networkManager(nullptr), canDraw(false) {
-    
+PaintingScreen::PaintingScreen(QWidget* parent) : QWidget(parent) {   
     // Группировка интерфейса
     QVBoxLayout* mainLayout = new QVBoxLayout(this); // Основной
     QVBoxLayout* vLayoutLeft = new QVBoxLayout; // Левый столбец
@@ -81,21 +78,12 @@ void PaintingScreen::newCanvas(){
     statusLabel->setText("Рисуйте вашего бойца!");
     statusLabel->setStyleSheet("QLabel { color: #6dbf6b; font-size: 16px; font-weight: 700; }");
 }
-
-void PaintingScreen::setNetworkManager(NetworkManager *netMgr) {
-    networkManager = netMgr;
-    canvas->setNetworkManager(netMgr);
-    
-    if (networkManager) {
-        connect(networkManager, QOverload<int>::of(&NetworkManager::gameStateChanged),
-                this, &PaintingScreen::onGameStateChanged);
-    }
-}
-
+/*
 QPixmap PaintingScreen::getCanvasPixmap() const {
-    return canvas->grab();
+    return canvas->grab(); // ?????
 }
-
+*/
+/*
 void PaintingScreen::onGameStateChanged(int state) {
     GameState gameState = static_cast<GameState>(state);
     
@@ -110,9 +98,11 @@ void PaintingScreen::onGameStateChanged(int state) {
         emit readyForVoting();
     }
 }
-
+*/
+/*
 void PaintingScreen::onStartVoting(const QList<int> &playerIds) {
     canDraw = false;
     statusLabel->setText("Голосование начинается!");
     statusLabel->setStyleSheet("QLabel { color: #6b71bf; font-size: 16px; font-weight: 700; }");
 }
+*/
