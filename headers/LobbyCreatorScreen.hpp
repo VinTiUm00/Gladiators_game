@@ -20,6 +20,7 @@ public:
     void setPlayers(const QStringList &players);
     void setStartEnabled(bool enabled);
     void playerConnected(int playerId, QString playerName);
+    void setIpLabel(QString ip);
 
 signals:
     void createGameClicked();
@@ -28,6 +29,7 @@ signals:
 private:
     QLabel *statusLabel;
     QLabel *playersLabel;
+    QLabel *ipLabel;
     QPushButton *createGameBtn;
     QListWidget *playersList; // Список игроков (виджет)
 };

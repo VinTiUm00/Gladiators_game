@@ -9,11 +9,37 @@ Client::Client() {
     connect(socket, &QTcpSocket::disconnected, this, &Client::onDisconnected);
     connect(socket, &QAbstractSocket::errorOccurred, this, &Client::onError);
 
-    qDebug() << "Клиент инициализирован";
+    qDebug() << "Client is initialized";
 }
 
 void Client::connectToServer(const QString &ip) {
-    socket->connectToHost(ip, 5555);
+    socket->connectToHost(ip, 5555, QAbstractSocket::ReadWrite, QAbstractSocket::IPv4Protocol);
+
+    if (socket->state() == QAbstractSocket::ConnectedState){
+        qDebug() << "Client has connected to the server";
+    }
+    else if (socket->state() == QAbstractSocket::HostLookupState) {
+        qDebug() << "Client is looking for a server";
+    }
+    else if (socket->state() == QAbstractSocket::ConnectingState) {
+        qDebug() << "Client is connecting to the server";
+    }
+    else if (socket->state() == QAbstractSocket::UnconnectedState){
+        qDebug() << "Client could not connect to the server";
+    }
+    else {qDebug() << socket->state();}
+}
+
+void Client::disconnectFromServer() {
+    socket->disconnectFromHost();
+
+    if (socket->state() == QAbstractSocket::ConnectedState){
+        qDebug() << "Client could not disconnect from the server";
+    }
+    else if (socket->state() == QAbstractSocket::UnconnectedState){
+        qDebug() << "Client disconnected from the server";
+    }
+    else {qDebug() << socket->state();}
 }
 
 void Client::sendAction(const QString &action){
@@ -22,20 +48,20 @@ void Client::sendAction(const QString &action){
 
 void Client::onConnected() {
     // //
-    qDebug() << "Подключен к серверу";
+    qDebug() << "Connected to the server";
 }
 
 void Client::onReadyRead() {
     // Чтение сообщения с сервера
     QByteArray data = socket->readAll();
 
-    qDebug() << "Сервер: " << data;
+    qDebug() << "Server: " << data;
 }
 
 void Client::onDisconnected() {
-    qDebug() << "Соединение разорвано";
+    qDebug() << "The connection is broken";
 }
 
 void Client::onError() {
-    qDebug() << "Ошибка сети:" << socket->errorString();
+    qDebug() << "Network error:" << socket->errorString();
 }

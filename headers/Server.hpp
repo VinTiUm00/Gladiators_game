@@ -12,6 +12,12 @@ public:
     Server();
     ~Server() = default;
 
+    QString getAddress();
+
+public slots:
+    void startServer();
+    void closeServer();
+
 private slots:
     void handleNewConnection();
     void clientDisconnected();

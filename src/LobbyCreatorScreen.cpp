@@ -31,6 +31,13 @@ LobbyCreatorScreen::LobbyCreatorScreen(QWidget* parent) : QWidget(parent){
     playersLabel->setMaximumWidth(560);
     playersLabel->setStyleSheet("QLabel { color: #cfe8ff; font-size: 14px; }");
 
+    // IP для подключения к лобби
+    ipLabel = new QLabel("IP лобби: ", this);
+    ipLabel->setAlignment(Qt::AlignCenter);
+    ipLabel->setWordWrap(true);
+    //ipLabel->setMaximumWidth(560);
+    ipLabel->setStyleSheet("QLabel { color: #cfe8ff; font-size: 14px; }");
+
     playersList = new QListWidget(this); // Список подключенных игроков
 
     createGameBtn = new QPushButton("Запуск игры", this);
@@ -52,6 +59,7 @@ LobbyCreatorScreen::LobbyCreatorScreen(QWidget* parent) : QWidget(parent){
     layout->addWidget(hintLabel, 0, Qt::AlignHCenter);
     layout->addWidget(statusLabel, 0, Qt::AlignHCenter);
     layout->addWidget(playersLabel, 0, Qt::AlignHCenter);
+    layout->addWidget(ipLabel, 0, Qt::AlignHCenter);
     layout->addWidget(playersList, 0, Qt::AlignHCenter);
 
     QHBoxLayout* buttonsLayout = new QHBoxLayout();
@@ -73,6 +81,11 @@ void LobbyCreatorScreen::setLobbyStatus(const QString &status){
 
 void LobbyCreatorScreen::setPlayers(const QStringList &players){
     playersLabel->setText("Подключённые игроки: " + players.join(", "));
+}
+
+void LobbyCreatorScreen::setIpLabel(QString ip) {
+    ipLabel->setText(QString("IP лобби: ") + ip);
+    ipLabel->update();
 }
 
 void LobbyCreatorScreen::setStartEnabled(bool enabled){

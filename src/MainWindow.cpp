@@ -6,6 +6,10 @@
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     setWindowTitle("Gladiators"); // Название окна
+    
+    // Инициализация сети
+    server = new Server();
+    client = new Client();
 
     // Создаем контейнер
     stack = new QStackedWidget(this);
@@ -38,7 +42,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
 
     connect(lobbyConnectionScreen, &LobbyConnectionScreen::connectToGame, this, [this] (QString ip){
         try {
-            //this->networkManager->connectToServer(ip, 5555);
+            this->client->connectToServer(ip);
             this->stack->setCurrentWidget(lobbyCreatorScreen);
         }
         catch (std::exception) {
@@ -66,7 +70,12 @@ void MainWindow::createGame(){
     lobbyCreatorScreen->setLobbyStatus("Лобби создано. Ожидаем подключения игроков.");
     lobbyCreatorScreen->setPlayers({"Host"});
     lobbyCreatorScreen->setStartEnabled(false);
+
     stack->setCurrentWidget(lobbyCreatorScreen);
+
+    server->startServer();
+
+    lobbyCreatorScreen->setIpLabel(server->getAddress());
 }
 
 void MainWindow::connectGame(){
@@ -85,6 +94,9 @@ void MainWindow::backToMenu(){
     networkManager->disconnectFromServer();
     */
     stack->setCurrentWidget(menuScreen);
+
+    server->closeServer();
+    client->disconnectFromServer();
 }
 
 void MainWindow::exit(){

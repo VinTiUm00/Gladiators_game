@@ -4,10 +4,37 @@ Server::Server() {
     server = new QTcpServer(this);
 
     // Настройка сервера
-    server->listen(QHostAddress::Any, 5555);
     connect(server, &QTcpServer::newConnection, this, &Server::handleNewConnection);
 
-    qDebug() << "Сервер запущен";
+    qDebug() << "Server is initialized";
+}
+
+void Server::startServer() {
+    server->listen(QHostAddress::LocalHost, 5555);
+
+    if (server->isListening()) {
+        qDebug() << "Server is running";
+    }
+    else {
+        qDebug() << "Server could not be started";
+    }
+}
+
+void Server::closeServer() {
+    server->close();
+
+    if (server->isListening()) {
+        qDebug() << "Server could not be disabled";
+    }
+    else {
+        qDebug() << "Server is turned off";
+    }
+}
+
+QString Server::getAddress() {
+    qDebug() << "Server IP: " << server->serverAddress().toString();
+
+    return server->serverAddress().toString();
 }
 
 void Server::handleNewConnection() {
@@ -21,7 +48,7 @@ void Server::handleNewConnection() {
     connect(clientSocket, &QTcpSocket::readyRead, this, &Server::readClientData);
     connect(clientSocket, &QTcpSocket::disconnected, this, &Server::clientDisconnected);
     
-    qDebug() << "Новое подключение. Всего клиентов: " << clients.size();
+    qDebug() << "New connection. Total clients: " << clients.size();
 }
 
 void Server::clientDisconnected() {
@@ -32,7 +59,7 @@ void Server::clientDisconnected() {
     clients.removeOne(clientSocket);
     clientSocket->deleteLater();
 
-    qDebug() << "Клиент отключился";
+    qDebug() << "Client has disconnected";
 }
 
 void Server::readClientData() {
@@ -42,5 +69,5 @@ void Server::readClientData() {
     // Читаем все присланные данные
     QByteArray data = clientSocket->readAll();
 
-    qDebug() << "Получено от клиента: " << data;
+    qDebug() << "Received from the client: " << data;
 }

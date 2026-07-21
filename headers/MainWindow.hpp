@@ -10,6 +10,8 @@
 #include "LobbyCreatorScreen.hpp"
 #include "LobbyConnectionScreen.hpp"
 #include "PaintingScreen.hpp"
+#include "Server.hpp"
+#include "Client.hpp"
 // #include "VotingScreen.hpp"
 
 class MainWindow : public QMainWindow {
@@ -28,6 +30,10 @@ private:
     LobbyConnectionScreen *lobbyConnectionScreen;
     PaintingScreen *paintingScreen;
     // VotingScreen *votingScreen;
+
+    // Сеть
+    Server* server;
+    Client* client;
 
 private slots:
     void createGame();

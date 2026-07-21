@@ -12,6 +12,7 @@ public:
     ~Client() = default;
 
     void connectToServer(const QString &ip);
+    void disconnectFromServer();
     void sendAction(const QString &action); // Временно или постоянно QString
 
 private slots:
