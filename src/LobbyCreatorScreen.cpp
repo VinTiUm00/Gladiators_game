@@ -34,8 +34,8 @@ LobbyCreatorScreen::LobbyCreatorScreen(QWidget* parent) : QWidget(parent){
     // IP для подключения к лобби
     ipLabel = new QLabel("IP лобби: ", this);
     ipLabel->setAlignment(Qt::AlignCenter);
-    ipLabel->setWordWrap(true);
-    //ipLabel->setMaximumWidth(560);
+    ipLabel->setWordWrap(false);
+    ipLabel->setMaximumWidth(560);
     ipLabel->setStyleSheet("QLabel { color: #cfe8ff; font-size: 14px; }");
 
     playersList = new QListWidget(this); // Список подключенных игроков

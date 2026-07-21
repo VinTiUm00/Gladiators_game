@@ -1,3 +1,5 @@
+#include <QNetworkInterface>
+
 #include "Server.hpp"
 
 Server::Server() {
@@ -10,7 +12,7 @@ Server::Server() {
 }
 
 void Server::startServer() {
-    server->listen(QHostAddress::LocalHost, 5555);
+    server->listen(this->getPcAddress(), 5555);
 
     if (server->isListening()) {
         qDebug() << "Server is running";
@@ -70,4 +72,22 @@ void Server::readClientData() {
     QByteArray data = clientSocket->readAll();
 
     qDebug() << "Received from the client: " << data;
+}
+
+QHostAddress Server::getPcAddress() {
+    QList<QHostAddress> list = QNetworkInterface::allAddresses();
+
+    for(int nIter=0; nIter<list.count(); nIter++) {
+        if (!list[nIter].isLoopback()) {
+            if (list[nIter].protocol() == QAbstractSocket::IPv4Protocol) {
+                qDebug() << "IP available: " << list[nIter].toString();
+
+                return list[nIter];
+            }
+        }
+    }
+
+    qDebug() << "No IP available, the standard one will be used (127.0.0.1)";
+    
+    return QHostAddress("127.0.0.1");
 }

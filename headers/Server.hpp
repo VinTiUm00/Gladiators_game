@@ -27,6 +27,7 @@ private:
     QTcpServer* server;
     QList<QTcpSocket*> clients;
 
+    QHostAddress getPcAddress();
 };
 
 #endif
