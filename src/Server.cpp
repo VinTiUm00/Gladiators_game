@@ -23,6 +23,10 @@ void Server::startServer() {
 }
 
 void Server::closeServer() {
+    for (QTcpSocket *clientSocket : clients) {
+        clientSocket->disconnectFromHost();
+    }
+
     server->close();
 
     if (server->isListening()) {

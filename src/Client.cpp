@@ -47,7 +47,8 @@ void Client::sendAction(const QString &action){
 }
 
 void Client::onConnected() {
-    // //
+    emit connectedToServer();
+
     qDebug() << "Connected to the server";
 }
 
@@ -59,6 +60,8 @@ void Client::onReadyRead() {
 }
 
 void Client::onDisconnected() {
+    emit disconnectedFromServer();
+
     qDebug() << "The connection is broken";
 }
 

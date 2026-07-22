@@ -15,6 +15,10 @@ public:
     void disconnectFromServer();
     void sendAction(const QString &action); // Временно или постоянно QString
 
+signals:
+    void connectedToServer();
+    void disconnectedFromServer();
+
 private slots:
     void onConnected();
     void onReadyRead();

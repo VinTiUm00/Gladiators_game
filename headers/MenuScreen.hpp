@@ -12,8 +12,8 @@ public:
     virtual ~MenuScreen();
 
 signals:
-    void startGameClicked();
-    void connectGameClicked();
+    void createLobbyClicked();
+    void connectLobbyClicked();
     void exitBtnClicked();
 };
 

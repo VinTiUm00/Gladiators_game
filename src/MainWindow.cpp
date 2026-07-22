@@ -11,9 +11,9 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     server = new Server();
     client = new Client();
 
-    // Создаем контейнер
-    stack = new QStackedWidget(this);
-    setCentralWidget(stack);
+    // Создаем контейнер для экранов
+    stackScreens = new QStackedWidget(this);
+    setCentralWidget(stackScreens);
 
     // Создаем экраны
     menuScreen = new MenuScreen();
@@ -23,34 +23,28 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     // votingScreen = new VotingScreen();
 
     // Добавляем экраны в стек
-    stack->addWidget(menuScreen);
-    stack->addWidget(lobbyScreen);
-    stack->addWidget(connectionScreen);
-    stack->addWidget(paintingScreen);
+    stackScreens->addWidget(menuScreen);
+    stackScreens->addWidget(lobbyScreen);
+    stackScreens->addWidget(connectionScreen);
+    stackScreens->addWidget(paintingScreen);
     // stack->addWidget(votingScreen);
 
     // Показываем главное меню по умолчанию
-    stack->setCurrentWidget(menuScreen);
+    stackScreens->setCurrentWidget(menuScreen);
 
     // Подключаем сигналы от кнопок меню
-    connect(menuScreen, &MenuScreen::startGameClicked, this, &MainWindow::createGame);
-    connect(menuScreen, &MenuScreen::connectGameClicked, this, &MainWindow::connectGame);
+    connect(menuScreen, &MenuScreen::createLobbyClicked, this, &MainWindow::createGame);
+    connect(menuScreen, &MenuScreen::connectLobbyClicked, this, &MainWindow::connectGame);
     connect(menuScreen, &MenuScreen::exitBtnClicked, this, &MainWindow::exit);
     
     connect(lobbyScreen, &LobbyScreen::createGameClicked, this, &MainWindow::openCanvas);
     connect(lobbyScreen, &LobbyScreen::backToMenuClicked, this, &MainWindow::backToMenu);
 
-    connect(connectionScreen, &ConnectionScreen::connectToGame, this, [this] (QString ip){
-        try {
-            this->client->connectToServer(ip);
-            this->stack->setCurrentWidget(lobbyScreen);
-        }
-        catch (std::exception) {
-            // Временное решение
-        }
-    });
+    connect(connectionScreen, &ConnectionScreen::connectToGame, client, &Client::connectToServer);
     connect(connectionScreen, &ConnectionScreen::backClicked, this, &MainWindow::backToMenu);
-    //connect(networkManager, &NetworkManager::playerConnected, lobbyCreatorScreen, &LobbyCreatorScreen::playerConnected);
+    connect(client, &Client::connectedToServer, lobbyScreen, [this]() {
+        stackScreens->setCurrentWidget(lobbyScreen);});
+    connect(client, &Client::disconnectedFromServer, this, &MainWindow::backToMenu);
 
     connect(paintingScreen, &PaintingScreen::exitLobbyClicked, this, &MainWindow::backToMenu);
     // connect(votingScreen, &VotingScreen::exitVotingClicked, this, &MainWindow::backToMenu);
@@ -71,7 +65,7 @@ void MainWindow::createGame(){
     lobbyScreen->setPlayers({"Host"});
     lobbyScreen->setStartEnabled(false);
 
-    stack->setCurrentWidget(lobbyScreen);
+    stackScreens->setCurrentWidget(lobbyScreen);
 
     server->startServer();
 
@@ -85,7 +79,7 @@ void MainWindow::connectGame(){
     networkManager->setPlayerNickname("Player");
     networkManager->beginLobby();
     */
-    stack->setCurrentWidget(connectionScreen);
+    stackScreens->setCurrentWidget(connectionScreen);
 }
 
 void MainWindow::backToMenu(){
@@ -93,7 +87,7 @@ void MainWindow::backToMenu(){
     networkManager->stopServer();
     networkManager->disconnectFromServer();
     */
-    stack->setCurrentWidget(menuScreen);
+    stackScreens->setCurrentWidget(menuScreen);
 
     server->closeServer();
     client->disconnectFromServer();
@@ -117,7 +111,7 @@ void MainWindow::openCanvas(){
     }
     */
     paintingScreen->newCanvas();
-    stack->setCurrentWidget(paintingScreen);
+    stackScreens->setCurrentWidget(paintingScreen);
 }
 
 /*

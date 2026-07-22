@@ -50,8 +50,8 @@ MenuScreen::MenuScreen(QWidget* parent) : QWidget(parent){
     layout->addLayout(buttonsLayout);
     layout->addSpacing(8);
 
-    connect(startBtn, &QPushButton::clicked, this, &MenuScreen::startGameClicked);
-    connect(connectBtn, &QPushButton::clicked, this, &MenuScreen::connectGameClicked);
+    connect(startBtn, &QPushButton::clicked, this, &MenuScreen::createLobbyClicked);
+    connect(connectBtn, &QPushButton::clicked, this, &MenuScreen::connectLobbyClicked);
     connect(exitBtn, &QPushButton::clicked, this, &MenuScreen::exitBtnClicked);
 }
 

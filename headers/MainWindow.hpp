@@ -22,7 +22,7 @@ public:
     explicit MainWindow(QWidget* parent = nullptr);
 
 private:
-    QStackedWidget *stack;
+    QStackedWidget *stackScreens;
 
     // Экраны
     MenuScreen *menuScreen;
