@@ -1,4 +1,7 @@
 #include <QNetworkInterface>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 
 #include "Server.hpp"
 
@@ -13,6 +16,7 @@ Server::Server() {
 
 void Server::startServer() {
     server->listen(this->getPcAddress(), 5555);
+    currentId = 0;
 
     if (server->isListening()) {
         qDebug() << "Server is running";
@@ -23,10 +27,13 @@ void Server::startServer() {
 }
 
 void Server::closeServer() {
-    for (QTcpSocket *clientSocket : clients) {
+    for (QTcpSocket *clientSocket : socketToId.keys()) {
         clientSocket->disconnectFromHost();
+        clientSocket->deleteLater();
     }
 
+    idToNickname.clear();
+    socketToId.clear();
     server->close();
 
     if (server->isListening()) {
@@ -48,13 +55,16 @@ void Server::handleNewConnection() {
     QTcpSocket *clientSocket = server->nextPendingConnection();
 
     // Сохраняем его в список
-    clients.append(clientSocket);
+    socketToId[clientSocket] = currentId++;
 
     // Настраиваем реакцию на действия клиента
     connect(clientSocket, &QTcpSocket::readyRead, this, &Server::readClientData);
     connect(clientSocket, &QTcpSocket::disconnected, this, &Server::clientDisconnected);
+
+    // Отправляем ip лобби клиенту
+    sendLobbyIp(clientSocket);
     
-    qDebug() << "New connection. Total clients: " << clients.size();
+    qDebug() << "New connection. Total clients: " << socketToId.size();
 }
 
 void Server::clientDisconnected() {
@@ -62,8 +72,12 @@ void Server::clientDisconnected() {
     QTcpSocket *clientSocket = qobject_cast<QTcpSocket*>(sender());
 
     // Освобождаем память
-    clients.removeOne(clientSocket);
+    idToNickname.remove(socketToId[clientSocket]);
+    socketToId.remove(clientSocket);
     clientSocket->deleteLater();
+
+    // Отправляем изменение списка игроков
+    sendChangedPlayerList();
 
     qDebug() << "Client has disconnected";
 }
@@ -74,6 +88,9 @@ void Server::readClientData() {
     
     // Читаем все присланные данные
     QByteArray data = clientSocket->readAll();
+
+    // Отправляем для определения и манипуляций
+    processMessage(data, clientSocket);
 
     qDebug() << "Received from the client: " << data;
 }
@@ -94,4 +111,64 @@ QHostAddress Server::getPcAddress() {
     qDebug() << "No IP available, the standard one will be used (127.0.0.1)";
     
     return QHostAddress("127.0.0.1");
+}
+
+void Server::postMessage(const QJsonObject &msg, QTcpSocket *target) {
+    if (target && target->state() == QAbstractSocket::ConnectedState) {
+        target->write(QJsonDocument(msg).toJson(QJsonDocument::Compact));
+    }
+}
+
+void Server::sendToAll(const QJsonObject &msg) {
+    for (QTcpSocket *clientSocket : socketToId.keys()) {
+        postMessage(msg, clientSocket);
+    }
+}
+
+void Server::sendLobbyIp(QTcpSocket *clientSocket) {
+    QJsonObject msg;
+
+    msg["type"] = "lobbyIp";
+    msg["ip"] = getAddress();
+
+    postMessage(msg, clientSocket);
+}
+
+void Server::sendChangedPlayerList() {
+    QJsonObject msg;
+    msg["type"] = "player_list";
+    
+    QJsonArray playerArray;
+    for (int playerId : idToNickname.keys()) {
+        QJsonObject playerObj;
+        playerObj["playerId"] = playerId;
+        playerObj["nickname"] = idToNickname[playerId];
+        playerArray.append(playerObj);
+    }
+    
+    msg["players"] = playerArray;
+    sendToAll(msg);
+}
+
+void Server::processMessage(const QByteArray &data, QTcpSocket *sender) {
+    // Проверяем данные
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+    if (doc.isNull() || !doc.isObject()) return;
+    
+    // Получаем тип объекта из данных
+    QJsonObject msg = doc.object();
+    QString type = msg["type"].toString();
+
+    // Смотрим тип и решаем что делать с данными
+    if (type == "playerName") { // Клиент отправил свой nickname
+        QString nickname = msg["nickname"].toString();
+        
+        // Присваиваем id nickname
+        idToNickname[socketToId[sender]] = nickname;
+
+        // Теперь можно его добавить в список игроков
+        sendChangedPlayerList();
+        
+        qDebug() << "New player: " << socketToId[sender] << nickname;
+    }
 }

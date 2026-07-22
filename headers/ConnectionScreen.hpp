@@ -13,7 +13,7 @@ public:
     virtual ~ConnectionScreen();
 
 signals:
-    void connectToGame(QString ip);
+    void connectToGame(QString ip, QString lastNickname);
     void backClicked();
 };
 

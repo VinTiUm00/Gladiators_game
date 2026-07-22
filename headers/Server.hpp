@@ -22,12 +22,21 @@ private slots:
     void handleNewConnection();
     void clientDisconnected();
     void readClientData();
+    void sendChangedPlayerList();
 
 private:
     QTcpServer* server;
-    QList<QTcpSocket*> clients;
+
+    QHash<QTcpSocket*, int> socketToId;
+    QHash<int, QString> idToNickname;
+    int currentId;
 
     QHostAddress getPcAddress();
+    void processMessage(const QByteArray &data, QTcpSocket *sender);
+    void postMessage(const QJsonObject &msg, QTcpSocket *target);
+    void sendLobbyIp(QTcpSocket *clientSocket);
+    void sendToAll(const QJsonObject &msg);
+    
 };
 
 #endif

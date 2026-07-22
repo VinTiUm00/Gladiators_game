@@ -11,22 +11,33 @@ public:
     Client();
     ~Client() = default;
 
-    void connectToServer(const QString &ip);
     void disconnectFromServer();
-    void sendAction(const QString &action); // Временно или постоянно QString
+
+public slots:
+    void connectToServer(const QString &ip, const QString &newName);
 
 signals:
     void connectedToServer();
     void disconnectedFromServer();
+    void receivedLobbyIp(const QString &lobbyIp);
+    void clearListOfPlayers();
+    void addInfoToPlayerList(int playerId, QString nickname);
 
 private slots:
     void onConnected();
-    void onReadyRead();
+    void readServerData();
     void onDisconnected();
     void onError();
 
+    void setNickname(const QString &nickname);
+
 private:
     QTcpSocket* socket;
+
+    QString myName;
+    void sendMessage(const QJsonObject &msg);
+    void sendNickname();
+    void handleMessage(const QByteArray &data);
 };
 
 #endif

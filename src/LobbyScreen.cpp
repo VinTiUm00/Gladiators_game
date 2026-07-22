@@ -92,10 +92,15 @@ void LobbyScreen::setStartEnabled(bool enabled){
     createGameBtn->setEnabled(enabled);
 }
 
-// Нужно будет переработать позже
-void LobbyScreen::playerConnected(int playerId, QString playerName){
-    QString playerInfo (playerName + " ID:" + QString::number(playerId));
-    this->playersList->addItem(playerInfo);
+// Изменение информации о игроках
+void LobbyScreen::addPlayerToList(const int &playerId, const QString &playerName){
+    QString playerInfo (QString::number(playerId) + ": " + playerName);
+    playersList->addItem(playerInfo);
+    playersList->update();
+}
+
+void LobbyScreen::clearPlayersList() {
+    playersList->clear();
 }
 
 LobbyScreen::~LobbyScreen() = default;

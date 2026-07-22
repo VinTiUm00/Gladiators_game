@@ -42,9 +42,13 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
 
     connect(connectionScreen, &ConnectionScreen::connectToGame, client, &Client::connectToServer);
     connect(connectionScreen, &ConnectionScreen::backClicked, this, &MainWindow::backToMenu);
+
     connect(client, &Client::connectedToServer, lobbyScreen, [this]() {
         stackScreens->setCurrentWidget(lobbyScreen);});
     connect(client, &Client::disconnectedFromServer, this, &MainWindow::backToMenu);
+    connect(client, &Client::receivedLobbyIp, lobbyScreen, &LobbyScreen::setIpLabel);
+    connect(client, &Client::clearListOfPlayers, lobbyScreen, &LobbyScreen::clearPlayersList);
+    connect(client, &Client::addInfoToPlayerList, lobbyScreen, &LobbyScreen::addPlayerToList);
 
     connect(paintingScreen, &PaintingScreen::exitLobbyClicked, this, &MainWindow::backToMenu);
     // connect(votingScreen, &VotingScreen::exitVotingClicked, this, &MainWindow::backToMenu);
@@ -88,6 +92,7 @@ void MainWindow::backToMenu(){
     networkManager->disconnectFromServer();
     */
     stackScreens->setCurrentWidget(menuScreen);
+    lobbyScreen->clearPlayersList();
 
     server->closeServer();
     client->disconnectFromServer();

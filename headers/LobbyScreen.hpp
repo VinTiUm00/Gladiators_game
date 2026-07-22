@@ -19,8 +19,11 @@ public:
     void setLobbyStatus(const QString &status);
     void setPlayers(const QStringList &players);
     void setStartEnabled(bool enabled);
-    void playerConnected(int playerId, QString playerName);
     void setIpLabel(QString ip);
+    void clearPlayersList();
+
+public slots:
+    void addPlayerToList(const int &playerId, const QString &playerName);
 
 signals:
     void createGameClicked();

@@ -77,7 +77,7 @@ ConnectionScreen::ConnectionScreen(QWidget* parent) : QWidget(parent){
         if (nick.isEmpty()) {
             nicknameInput->setText("Игрок");
         }
-        emit connectToGame(ipInput->text());
+        emit connectToGame(ipInput->text(), nicknameInput->text());
     });
     connect(backBtn, &QPushButton::clicked, this, &ConnectionScreen::backClicked);
 }
