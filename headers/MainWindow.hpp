@@ -3,12 +3,16 @@
 
 #include <QMainWindow>
 #include <QStackedWidget>
+#include <QMap>
+#include <QPixmap>
 
 #include "MenuScreen.hpp"
-#include "LobbyCreatorScreen.hpp"
-#include "LobbyConnectionScreen.hpp"
+#include "LobbyScreen.hpp"
+#include "ConnectionScreen.hpp"
 #include "PaintingScreen.hpp"
-// Другие окна
+#include "Server.hpp"
+#include "Client.hpp"
+// #include "VotingScreen.hpp"
 
 class MainWindow : public QMainWindow {
 
@@ -18,13 +22,18 @@ public:
     explicit MainWindow(QWidget* parent = nullptr);
 
 private:
-    QStackedWidget *stack;
+    QStackedWidget *stackScreens;
 
     // Экраны
     MenuScreen *menuScreen;
-    LobbyCreatorScreen *lobbyCreatorScreen;
-    LobbyConnectionScreen *lobbyConnectionScreen;
+    LobbyScreen *lobbyScreen;
+    ConnectionScreen *connectionScreen;
     PaintingScreen *paintingScreen;
+    // VotingScreen *votingScreen;
+
+    // Сеть
+    Server* server;
+    Client* client;
 
 private slots:
     void createGame();
@@ -32,6 +41,12 @@ private slots:
     void backToMenu();
     void exit();
     void openCanvas();
+    
+    // Сетевые слоты
+    //void onPlayerConnected(int playerId, const QString &nickname);
+    //void onGameStateChanged(int state);
+    //void onVotingStarted(const QList<int> &playerIds);
+    //void onConnectionError(const QString &error);
 };
 
 #endif

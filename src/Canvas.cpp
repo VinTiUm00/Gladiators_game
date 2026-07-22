@@ -56,7 +56,7 @@ void Canvas::mousePressEvent(QMouseEvent *event) {
         painter.setPen(QPen(penColor, penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
         
         painter.drawPoint(lastPos);
-        
+
         update();
     }
 }

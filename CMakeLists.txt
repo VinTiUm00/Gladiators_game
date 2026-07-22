@@ -9,22 +9,30 @@ set(SRC_FILES # файлы для компиляции
     main.cpp
     src/MainWindow.cpp
     src/MenuScreen.cpp
-    src/LobbyCreatorScreen.cpp
-    src/LobbyConnectionScreen.cpp
+    src/LobbyScreen.cpp
+    src/ConnectionScreen.cpp
     src/PaintingScreen.cpp
     src/Canvas.cpp
+    src/Server.cpp
+    src/Client.cpp
+    
+    # src/VotingScreen.cpp
 )
 
 set(HEADER_FILES # header'ы для MOC (header'ы, где используется макрос Q_OBJECT)
     headers/MainWindow.hpp
     headers/MenuScreen.hpp
-    headers/LobbyCreatorScreen.hpp
-    headers/LobbyConnectionScreen.hpp
+    headers/LobbyScreen.hpp
+    headers/ConnectionScreen.hpp
     headers/PaintingScreen.hpp
     headers/Canvas.hpp
+    headers/Server.hpp
+    headers/Client.hpp
+    
+    # headers/VotingScreen.hpp
 )
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Gui Widgets) # Поиск QT и его компонентов
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Gui Widgets Network) # Поиск QT и его компонентов
 
 qt_standard_project_setup()
 
@@ -33,6 +41,8 @@ qt_wrap_cpp(MOC_FILES ${HEADER_FILES})
 qt_add_executable(${PROJECT_NAME}
     ${SRC_FILES}
     ${MOC_FILES}
+
+    res/Titles.json
     # res/icon.rc # Иконка приложения
 )
 
@@ -42,6 +52,7 @@ target_link_libraries(${PROJECT_NAME}
         Qt::Core
         Qt::Gui
         Qt::Widgets
+        Qt::Network
 )
 
 include(GNUInstallDirs)

@@ -2,17 +2,18 @@
 #define LOBBYCONNECTIONSCREEN_HPP
 
 #include <QWidget>
+#include <QString>
 
-class LobbyConnectionScreen : public QWidget {
+class ConnectionScreen : public QWidget {
 
     Q_OBJECT // Макрос, без которого не работают сигналы
 
 public:
-    LobbyConnectionScreen(QWidget* parent = nullptr);
-    virtual ~LobbyConnectionScreen();
+    ConnectionScreen(QWidget* parent = nullptr);
+    virtual ~ConnectionScreen();
 
 signals:
-    void connectToGame();
+    void connectToGame(QString ip, QString lastNickname);
     void backClicked();
 };
 
