@@ -17,10 +17,10 @@ public:
 
 public:
     void setLobbyStatus(const QString &status);
-    void setPlayers(const QStringList &players);
     void setStartEnabled(bool enabled);
     void setIpLabel(QString ip);
     void clearPlayersList();
+    void setHostRole(bool isHost);
 
 public slots:
     void addPlayerToList(const int &playerId, const QString &playerName);
@@ -31,7 +31,6 @@ signals:
 
 private:
     QLabel *statusLabel;
-    QLabel *playersLabel;
     QLabel *ipLabel;
     QPushButton *createGameBtn;
     QListWidget *playersList; // Список игроков (виджет)

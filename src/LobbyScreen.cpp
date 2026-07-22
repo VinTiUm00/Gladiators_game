@@ -25,12 +25,6 @@ LobbyScreen::LobbyScreen(QWidget* parent) : QWidget(parent){
     statusLabel->setAlignment(Qt::AlignCenter);
     statusLabel->setStyleSheet("QLabel { color: #e7e7ff; font-size: 15px; font-weight: 600; }");
 
-    playersLabel = new QLabel("Подключённые игроки: 1 (хост)", this);
-    playersLabel->setAlignment(Qt::AlignCenter);
-    playersLabel->setWordWrap(true);
-    playersLabel->setMaximumWidth(560);
-    playersLabel->setStyleSheet("QLabel { color: #cfe8ff; font-size: 14px; }");
-
     // IP для подключения к лобби
     ipLabel = new QLabel("IP лобби: ", this);
     ipLabel->setAlignment(Qt::AlignCenter);
@@ -38,7 +32,11 @@ LobbyScreen::LobbyScreen(QWidget* parent) : QWidget(parent){
     ipLabel->setMaximumWidth(560);
     ipLabel->setStyleSheet("QLabel { color: #cfe8ff; font-size: 14px; }");
 
-    playersList = new QListWidget(this); // Список подключенных игроков
+    // Список подключенных игроков
+    playersList = new QListWidget(this);
+    playersList->setSortingEnabled(true);
+    playersList->setDragEnabled(false);
+    playersList->setSelectionMode(QAbstractItemView::NoSelection);
 
     createGameBtn = new QPushButton("Запуск игры", this);
     createGameBtn->setFixedHeight(48);
@@ -58,7 +56,6 @@ LobbyScreen::LobbyScreen(QWidget* parent) : QWidget(parent){
     layout->addWidget(titleLabel, 0, Qt::AlignHCenter);
     layout->addWidget(hintLabel, 0, Qt::AlignHCenter);
     layout->addWidget(statusLabel, 0, Qt::AlignHCenter);
-    layout->addWidget(playersLabel, 0, Qt::AlignHCenter);
     layout->addWidget(ipLabel, 0, Qt::AlignHCenter);
     layout->addWidget(playersList, 0, Qt::AlignHCenter);
 
@@ -79,10 +76,6 @@ void LobbyScreen::setLobbyStatus(const QString &status){
     statusLabel->setText(status);
 }
 
-void LobbyScreen::setPlayers(const QStringList &players){
-    playersLabel->setText("Подключённые игроки: " + players.join(", "));
-}
-
 void LobbyScreen::setIpLabel(QString ip) {
     ipLabel->setText(QString("IP лобби: ") + ip);
     ipLabel->update();
@@ -101,6 +94,15 @@ void LobbyScreen::addPlayerToList(const int &playerId, const QString &playerName
 
 void LobbyScreen::clearPlayersList() {
     playersList->clear();
+}
+
+void LobbyScreen::setHostRole(bool isHost) {
+    if (isHost) {
+        createGameBtn->show();
+    }
+    else {createGameBtn->hide();}
+
+    createGameBtn->update();
 }
 
 LobbyScreen::~LobbyScreen() = default;

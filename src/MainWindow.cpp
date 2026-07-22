@@ -52,45 +52,24 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
 
     connect(paintingScreen, &PaintingScreen::exitLobbyClicked, this, &MainWindow::backToMenu);
     // connect(votingScreen, &VotingScreen::exitVotingClicked, this, &MainWindow::backToMenu);
-
-    // Подключаем сигналы от NetworkManager
-    //connect(networkManager, QOverload<int, const QString &>::of(&NetworkManager::playerConnected),
-    //        this, &MainWindow::onPlayerConnected);
 }
 
 void MainWindow::createGame(){
-    /*
-    networkManager->startServer();
-    networkManager->setPlayerId(0);
-    networkManager->setPlayerNickname("Host");
-    networkManager->beginLobby();
-    */
     lobbyScreen->setLobbyStatus("Лобби создано. Ожидаем подключения игроков.");
-    lobbyScreen->setPlayers({"Host"});
     lobbyScreen->setStartEnabled(false);
 
-    stackScreens->setCurrentWidget(lobbyScreen);
+    lobbyScreen->setHostRole(true);
 
     server->startServer();
-
-    lobbyScreen->setIpLabel(server->getAddress());
+    client->connectToServer(server->getAddress(), "Хост");
 }
 
 void MainWindow::connectGame(){
-    /*
-    networkManager->connectToServer("127.0.0.1", 5555);
-    networkManager->setPlayerId(1);
-    networkManager->setPlayerNickname("Player");
-    networkManager->beginLobby();
-    */
+    lobbyScreen->setHostRole(false);
     stackScreens->setCurrentWidget(connectionScreen);
 }
 
 void MainWindow::backToMenu(){
-    /*
-    networkManager->stopServer();
-    networkManager->disconnectFromServer();
-    */
     stackScreens->setCurrentWidget(menuScreen);
     lobbyScreen->clearPlayersList();
 
@@ -99,37 +78,14 @@ void MainWindow::backToMenu(){
 }
 
 void MainWindow::exit(){
-    /*
-    networkManager->stopServer();
-    networkManager->disconnectFromServer();
-    */
     this->close();
 }
 
 void MainWindow::openCanvas(){
-    /*
-    if (networkManager->isHost()) {
-        networkManager->addConnectedPlayer(1, "Player");
-        networkManager->startGameSession();
-    } else {
-        networkManager->startGameSession();
-    }
-    */
     paintingScreen->newCanvas();
     stackScreens->setCurrentWidget(paintingScreen);
 }
 
-/*
-void MainWindow::onPlayerConnected(int playerId, const QString &nickname) {
-    qDebug() << "Player connected:" << playerId << nickname;
-    if (networkManager->isHost()) {
-        lobbyCreatorScreen->setLobbyStatus("Игрок подключился. Можно запускать игру.");
-        lobbyCreatorScreen->setPlayers({"Host", nickname});
-        lobbyCreatorScreen->setStartEnabled(true);
-        stack->setCurrentWidget(lobbyCreatorScreen);
-    }
-}
-*/
 /*
 void MainWindow::onGameStateChanged(int state) {
     GameState gameState = static_cast<GameState>(state);
@@ -152,10 +108,5 @@ void MainWindow::onGameStateChanged(int state) {
 void MainWindow::onVotingStarted(const QList<int> &playerIds) {
     votingScreen->startVoting(playerIds, playerDrawings);
     stack->setCurrentWidget(votingScreen);
-}
-*/
-/*
-void MainWindow::onConnectionError(const QString &error) {
-    QMessageBox::critical(this, "Connection Error", error);
 }
 */
