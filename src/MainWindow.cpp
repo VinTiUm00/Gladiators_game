@@ -17,15 +17,15 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
 
     // Создаем экраны
     menuScreen = new MenuScreen();
-    lobbyCreatorScreen = new LobbyCreatorScreen();
-    lobbyConnectionScreen = new LobbyConnectionScreen();
+    lobbyScreen = new LobbyScreen();
+    connectionScreen = new ConnectionScreen();
     paintingScreen = new PaintingScreen();
     // votingScreen = new VotingScreen();
 
     // Добавляем экраны в стек
     stack->addWidget(menuScreen);
-    stack->addWidget(lobbyCreatorScreen);
-    stack->addWidget(lobbyConnectionScreen);
+    stack->addWidget(lobbyScreen);
+    stack->addWidget(connectionScreen);
     stack->addWidget(paintingScreen);
     // stack->addWidget(votingScreen);
 
@@ -37,19 +37,19 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     connect(menuScreen, &MenuScreen::connectGameClicked, this, &MainWindow::connectGame);
     connect(menuScreen, &MenuScreen::exitBtnClicked, this, &MainWindow::exit);
     
-    connect(lobbyCreatorScreen, &LobbyCreatorScreen::createGameClicked, this, &MainWindow::openCanvas);
-    connect(lobbyCreatorScreen, &LobbyCreatorScreen::backToMenuClicked, this, &MainWindow::backToMenu);
+    connect(lobbyScreen, &LobbyScreen::createGameClicked, this, &MainWindow::openCanvas);
+    connect(lobbyScreen, &LobbyScreen::backToMenuClicked, this, &MainWindow::backToMenu);
 
-    connect(lobbyConnectionScreen, &LobbyConnectionScreen::connectToGame, this, [this] (QString ip){
+    connect(connectionScreen, &ConnectionScreen::connectToGame, this, [this] (QString ip){
         try {
             this->client->connectToServer(ip);
-            this->stack->setCurrentWidget(lobbyCreatorScreen);
+            this->stack->setCurrentWidget(lobbyScreen);
         }
         catch (std::exception) {
             // Временное решение
         }
     });
-    connect(lobbyConnectionScreen, &LobbyConnectionScreen::backClicked, this, &MainWindow::backToMenu);
+    connect(connectionScreen, &ConnectionScreen::backClicked, this, &MainWindow::backToMenu);
     //connect(networkManager, &NetworkManager::playerConnected, lobbyCreatorScreen, &LobbyCreatorScreen::playerConnected);
 
     connect(paintingScreen, &PaintingScreen::exitLobbyClicked, this, &MainWindow::backToMenu);
@@ -67,15 +67,15 @@ void MainWindow::createGame(){
     networkManager->setPlayerNickname("Host");
     networkManager->beginLobby();
     */
-    lobbyCreatorScreen->setLobbyStatus("Лобби создано. Ожидаем подключения игроков.");
-    lobbyCreatorScreen->setPlayers({"Host"});
-    lobbyCreatorScreen->setStartEnabled(false);
+    lobbyScreen->setLobbyStatus("Лобби создано. Ожидаем подключения игроков.");
+    lobbyScreen->setPlayers({"Host"});
+    lobbyScreen->setStartEnabled(false);
 
-    stack->setCurrentWidget(lobbyCreatorScreen);
+    stack->setCurrentWidget(lobbyScreen);
 
     server->startServer();
 
-    lobbyCreatorScreen->setIpLabel(server->getAddress());
+    lobbyScreen->setIpLabel(server->getAddress());
 }
 
 void MainWindow::connectGame(){
@@ -85,7 +85,7 @@ void MainWindow::connectGame(){
     networkManager->setPlayerNickname("Player");
     networkManager->beginLobby();
     */
-    stack->setCurrentWidget(lobbyConnectionScreen);
+    stack->setCurrentWidget(connectionScreen);
 }
 
 void MainWindow::backToMenu(){

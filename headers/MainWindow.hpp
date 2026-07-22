@@ -7,8 +7,8 @@
 #include <QPixmap>
 
 #include "MenuScreen.hpp"
-#include "LobbyCreatorScreen.hpp"
-#include "LobbyConnectionScreen.hpp"
+#include "LobbyScreen.hpp"
+#include "ConnectionScreen.hpp"
 #include "PaintingScreen.hpp"
 #include "Server.hpp"
 #include "Client.hpp"
@@ -26,8 +26,8 @@ private:
 
     // Экраны
     MenuScreen *menuScreen;
-    LobbyCreatorScreen *lobbyCreatorScreen;
-    LobbyConnectionScreen *lobbyConnectionScreen;
+    LobbyScreen *lobbyScreen;
+    ConnectionScreen *connectionScreen;
     PaintingScreen *paintingScreen;
     // VotingScreen *votingScreen;
 

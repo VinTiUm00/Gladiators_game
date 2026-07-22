@@ -7,13 +7,13 @@
 #include <QPushButton>
 #include <QListWidget>
 
-class LobbyCreatorScreen : public QWidget {
+class LobbyScreen : public QWidget {
 
     Q_OBJECT // Макрос, без которого не работают сигналы
 
 public:
-    LobbyCreatorScreen(QWidget* parent = nullptr);
-    virtual ~LobbyCreatorScreen();
+    LobbyScreen(QWidget* parent = nullptr);
+    virtual ~LobbyScreen();
 
 public:
     void setLobbyStatus(const QString &status);

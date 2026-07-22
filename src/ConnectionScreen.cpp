@@ -5,9 +5,9 @@
 #include <QLineEdit>
 #include <QSizePolicy>
 
-#include "LobbyConnectionScreen.hpp"
+#include "ConnectionScreen.hpp"
 
-LobbyConnectionScreen::LobbyConnectionScreen(QWidget* parent) : QWidget(parent){
+ConnectionScreen::ConnectionScreen(QWidget* parent) : QWidget(parent){
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->setSpacing(18);
     layout->setContentsMargins(36, 32, 36, 32);
@@ -79,7 +79,7 @@ LobbyConnectionScreen::LobbyConnectionScreen(QWidget* parent) : QWidget(parent){
         }
         emit connectToGame(ipInput->text());
     });
-    connect(backBtn, &QPushButton::clicked, this, &LobbyConnectionScreen::backClicked);
+    connect(backBtn, &QPushButton::clicked, this, &ConnectionScreen::backClicked);
 }
 
-LobbyConnectionScreen::~LobbyConnectionScreen() = default;
+ConnectionScreen::~ConnectionScreen() = default;

@@ -4,9 +4,9 @@
 #include <QLabel>
 #include <QSizePolicy>
 
-#include "LobbyCreatorScreen.hpp"
+#include "LobbyScreen.hpp"
 
-LobbyCreatorScreen::LobbyCreatorScreen(QWidget* parent) : QWidget(parent){
+LobbyScreen::LobbyScreen(QWidget* parent) : QWidget(parent){
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->setSpacing(14);
     layout->setContentsMargins(40, 40, 40, 40);
@@ -71,31 +71,31 @@ LobbyCreatorScreen::LobbyCreatorScreen(QWidget* parent) : QWidget(parent){
     layout->addLayout(buttonsLayout);
     layout->addStretch();
 
-    connect(createGameBtn, &QPushButton::clicked, this, &LobbyCreatorScreen::createGameClicked);
-    connect(backToMenuBtn, &QPushButton::clicked, this, &LobbyCreatorScreen::backToMenuClicked);
+    connect(createGameBtn, &QPushButton::clicked, this, &LobbyScreen::createGameClicked);
+    connect(backToMenuBtn, &QPushButton::clicked, this, &LobbyScreen::backToMenuClicked);
 }
 
-void LobbyCreatorScreen::setLobbyStatus(const QString &status){
+void LobbyScreen::setLobbyStatus(const QString &status){
     statusLabel->setText(status);
 }
 
-void LobbyCreatorScreen::setPlayers(const QStringList &players){
+void LobbyScreen::setPlayers(const QStringList &players){
     playersLabel->setText("Подключённые игроки: " + players.join(", "));
 }
 
-void LobbyCreatorScreen::setIpLabel(QString ip) {
+void LobbyScreen::setIpLabel(QString ip) {
     ipLabel->setText(QString("IP лобби: ") + ip);
     ipLabel->update();
 }
 
-void LobbyCreatorScreen::setStartEnabled(bool enabled){
+void LobbyScreen::setStartEnabled(bool enabled){
     createGameBtn->setEnabled(enabled);
 }
 
 // Нужно будет переработать позже
-void LobbyCreatorScreen::playerConnected(int playerId, QString playerName){
+void LobbyScreen::playerConnected(int playerId, QString playerName){
     QString playerInfo (playerName + " ID:" + QString::number(playerId));
     this->playersList->addItem(playerInfo);
 }
 
-LobbyCreatorScreen::~LobbyCreatorScreen() = default;
+LobbyScreen::~LobbyScreen() = default;
