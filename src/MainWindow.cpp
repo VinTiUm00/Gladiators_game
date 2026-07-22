@@ -37,7 +37,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     connect(menuScreen, &MenuScreen::connectLobbyClicked, this, &MainWindow::connectGame);
     connect(menuScreen, &MenuScreen::exitBtnClicked, this, &MainWindow::exit);
     
-    connect(lobbyScreen, &LobbyScreen::createGameClicked, this, &MainWindow::openCanvas);
+    connect(lobbyScreen, &LobbyScreen::createGameClicked, server, &Server::firstRoundStarts);
     connect(lobbyScreen, &LobbyScreen::backToMenuClicked, this, &MainWindow::backToMenu);
 
     connect(connectionScreen, &ConnectionScreen::connectToGame, client, &Client::connectToServer);
@@ -49,6 +49,13 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     connect(client, &Client::receivedLobbyIp, lobbyScreen, &LobbyScreen::setIpLabel);
     connect(client, &Client::clearListOfPlayers, lobbyScreen, &LobbyScreen::clearPlayersList);
     connect(client, &Client::addInfoToPlayerList, lobbyScreen, &LobbyScreen::addPlayerToList);
+
+    connect(client, &Client::firstRoundThemeAccepted, [this](const QString &theme) {
+        paintingScreen->setThemeLabel(theme);
+        openCanvas();
+    });
+
+    connect(server, &Server::playerListPosted, lobbyScreen, &LobbyScreen::checkStartConditions);
 
     connect(paintingScreen, &PaintingScreen::exitLobbyClicked, this, &MainWindow::backToMenu);
     // connect(votingScreen, &VotingScreen::exitVotingClicked, this, &MainWindow::backToMenu);

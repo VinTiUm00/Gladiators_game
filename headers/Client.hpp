@@ -23,6 +23,8 @@ signals:
     void clearListOfPlayers();
     void addInfoToPlayerList(int playerId, QString nickname);
 
+    void firstRoundThemeAccepted(const QString &theme);
+
 private slots:
     void onConnected();
     void readServerData();

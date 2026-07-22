@@ -105,4 +105,11 @@ void LobbyScreen::setHostRole(bool isHost) {
     createGameBtn->update();
 }
 
+void LobbyScreen::checkStartConditions(int numberPlayers) {
+    if (numberPlayers != 0 && numberPlayers > 2) {
+        setStartEnabled(true);
+    }
+    else {setStartEnabled(false);}
+}
+
 LobbyScreen::~LobbyScreen() = default;

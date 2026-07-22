@@ -18,6 +18,7 @@ public:
     virtual ~PaintingScreen();
 
     void newCanvas();
+    void setThemeLabel(const QString &theme);
     //QPixmap getCanvasPixmap() const;
 
 public slots:
@@ -26,8 +27,7 @@ public slots:
 
 private:
     Canvas *canvas;
-    QLabel *statusLabel;
-    bool canDraw; // ??
+    QLabel *themeLabel;
 
 signals:
     void exitLobbyClicked();

@@ -33,10 +33,10 @@ PaintingScreen::PaintingScreen(QWidget* parent) : QWidget(parent) {
     widthBox->setMaximumWidth(150);
     widthBox->setPrefix("Ширина пера: ");
 
-    // Статус
-    statusLabel = new QLabel("Ожидание других игроков...", this);
-    statusLabel->setAlignment(Qt::AlignCenter);
-    statusLabel->setStyleSheet("QLabel { color: #6b71bf; font-size: 16px; font-weight: 700; }");
+    // Тема рисунка
+    themeLabel = new QLabel(this);
+    themeLabel->setAlignment(Qt::AlignCenter);
+    themeLabel->setStyleSheet("QLabel { color: #6c6bbf; font-size: 16px; font-weight: 700; }");
 
     // Инициализация кнопок
     QPushButton *exitLobbyBtn = new QPushButton("Покинуть лобби", this);
@@ -55,7 +55,7 @@ PaintingScreen::PaintingScreen(QWidget* parent) : QWidget(parent) {
     hLayout->addLayout(vLayoutLeft);
     hLayout->addLayout(vLayoutRight);
 
-    mainLayout->addWidget(statusLabel);
+    mainLayout->addWidget(themeLabel);
     mainLayout->addLayout(hLayout);
 
     QHBoxLayout *exitBtnLayout = new QHBoxLayout();
@@ -74,10 +74,12 @@ PaintingScreen::~PaintingScreen() = default;
 
 void PaintingScreen::newCanvas(){
     this->canvas->clearCanvas();
-    canDraw = true;
-    statusLabel->setText("Рисуйте вашего бойца!");
-    statusLabel->setStyleSheet("QLabel { color: #6dbf6b; font-size: 16px; font-weight: 700; }");
 }
+
+void PaintingScreen::setThemeLabel(const QString &theme) {
+    themeLabel->setText(theme);
+}
+
 /*
 QPixmap PaintingScreen::getCanvasPixmap() const {
     return canvas->grab(); // ?????

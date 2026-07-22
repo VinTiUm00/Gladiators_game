@@ -2,6 +2,8 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QFile>
+#include <QRandomGenerator>
 
 #include "Server.hpp"
 
@@ -10,6 +12,7 @@ Server::Server() {
 
     // Настройка сервера
     connect(server, &QTcpServer::newConnection, this, &Server::handleNewConnection);
+    loadThemes();
 
     qDebug() << "Server is initialized";
 }
@@ -34,6 +37,7 @@ void Server::closeServer() {
 
     idToNickname.clear();
     socketToId.clear();
+    idToTheme.clear();
     server->close();
 
     if (server->isListening()) {
@@ -148,6 +152,8 @@ void Server::sendChangedPlayerList() {
     
     msg["players"] = playerArray;
     sendToAll(msg);
+
+    emit playerListPosted(idToNickname.size());
 }
 
 void Server::processMessage(const QByteArray &data, QTcpSocket *sender) {
@@ -171,4 +177,51 @@ void Server::processMessage(const QByteArray &data, QTcpSocket *sender) {
         
         qDebug() << "New player: " << socketToId[sender] << nickname;
     }
+}
+
+void Server::loadThemes() {
+    // Импорт титулов
+    QFile file(":/Titles.json");
+
+    QByteArray data = file.readAll();
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+
+    QJsonObject root = doc.object();
+    QJsonArray themesArray = root["themes"].toArray();
+    
+    for (const QJsonValue &val : themesArray) {
+        themes.append(val.toString());
+    }
+
+    qDebug() << "Themes loaded: " << themes.size();
+}
+
+void Server::firstRoundStarts() {
+    for (QTcpSocket *clientSocket : socketToId.keys()) {
+        // Если все темы использованы, сбрасываем
+        if (usedThemes.size() >= themes.size()) {
+            usedThemes.clear();
+        }
+        
+        // Ищем неиспользованную тему
+        QString theme;
+        for (int attempt = 0; usedThemes.contains(theme) && attempt < 100; attempt++) {
+            int idx = QRandomGenerator::global()->bounded(themes.size());
+            theme = themes[idx];
+        }
+        
+        usedThemes.append(theme);
+
+        idToTheme[socketToId[clientSocket]] = theme;
+        sendForFirstRound(theme, clientSocket);
+    }
+}
+
+void Server::sendForFirstRound(const QString &theme, QTcpSocket *player) {
+    QJsonObject msg;
+
+    msg["type"] = "first_round";
+    msg["theme"] = theme;
+
+    postMessage(msg, player);
 }

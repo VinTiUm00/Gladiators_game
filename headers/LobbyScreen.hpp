@@ -24,6 +24,7 @@ public:
 
 public slots:
     void addPlayerToList(const int &playerId, const QString &playerName);
+    void checkStartConditions(int numberPlayers);
 
 signals:
     void createGameClicked();

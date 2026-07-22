@@ -1,9 +1,19 @@
 #include <QApplication>
+#include <QFile>
 
 #include "MainWindow.hpp"
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);  // Инициализация приложения
+
+    /* // Проверка наличия .json файла
+    QFile testFile(":/Titles.json");
+    if (testFile.exists()) {
+        qDebug() << "OK";
+    } else {
+        qDebug() << "NO";
+    }
+    */
 
     MainWindow window; // Инициализация главного окна
     window.setObjectName("mainWindow"); // Отображаемое имя

@@ -110,7 +110,8 @@ void Client::handleMessage(const QByteArray &data) {
         emit receivedLobbyIp(lobbyIp);
         
         qDebug() << "IP received: " << lobbyIp;
-    } else if (type == "player_list") { // Сервер прислал новый список игроков
+    }
+    else if (type == "player_list") { // Сервер прислал новый список игроков
         emit clearListOfPlayers();
 
         QJsonArray playerArray = msg["players"].toArray();
@@ -122,5 +123,13 @@ void Client::handleMessage(const QByteArray &data) {
             emit addInfoToPlayerList(playerId, nickname);
         }
         qDebug() << "New player list: " << playerArray.size();
+    }
+    else if (type == "first_round") { // Сервер прислал тему для первого раунда
+        QString theme = msg["theme"].toString();
+        
+        // Отправляем сигнал с полученной темой
+        emit firstRoundThemeAccepted(theme);
+        
+        qDebug() << "Theme received: " << theme;
     }
 }
